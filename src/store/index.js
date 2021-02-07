@@ -32,7 +32,11 @@ export default new Vuex.Store({
       }
     },
     SET_FAVORITE_PEOPLE(state, payload) {
-      state.favoritePeople.push(payload);
+      if (payload.length === 0) {
+        state.favoritePeople = [];
+      } else {
+        state.favoritePeople.push(payload);
+      }
     },
     SET_PEOPLE(state, payload) {
       state.people = payload;

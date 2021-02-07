@@ -26,6 +26,9 @@ export default {
   },
   computed: {
     ...mapGetters(["getFavoritePeople"])
+  },
+  beforeDestroy() {
+    this.$store.commit("SET_FAVORITE_PEOPLE", []);
   }
 };
 </script>
