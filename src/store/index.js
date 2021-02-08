@@ -12,6 +12,7 @@ export default new Vuex.Store({
     })
   ],
   state: {
+    isloadingData: false,
     count: null,
     people: [],
     favoritePeople: [],
@@ -20,6 +21,9 @@ export default new Vuex.Store({
   mutations: {
     SET_COUNT(state, payload) {
       state.count = payload;
+    },
+    SET_LOADING_DATA(state, payload) {
+      state.isloadingData = payload;
     },
     SET_FAVORITE_PEOPLE_ID(state, payload) {
       if (state.favoritePeopleId.includes(payload)) {

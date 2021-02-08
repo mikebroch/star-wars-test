@@ -1,6 +1,14 @@
 <template>
   <div class="favorite-page-wrapper">
-    <el-card class="box-card">
+    <fulfilling-bouncing-circle-spinner
+      class="spinner"
+      v-if="isLoadingData"
+      :animation-duration="4000"
+      :size="60"
+      color="#FFE81F"
+    />
+
+    <el-card class="box-card" v-if="!isLoadingData">
       <div slot="header" class="clearfix">
         <span>Любимые герои</span>
       </div>
@@ -17,14 +25,23 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
+import { FulfillingBouncingCircleSpinner } from "epic-spinners";
 
 export default {
   name: "Favorite",
-  created() {
-    this.$store.dispatch("getPeopleById");
+  components: {
+    FulfillingBouncingCircleSpinner
+  },
+  async created() {
+    this.$store.commit("SET_LOADING_DATA", true);
+    await Promise.all([this.$store.dispatch("getPeopleById")]);
+    this.$store.commit("SET_LOADING_DATA", false);
   },
   computed: {
+    ...mapState({
+      isLoadingData: state => state.isloadingData
+    }),
     ...mapGetters(["getFavoritePeople"])
   },
   beforeDestroy() {

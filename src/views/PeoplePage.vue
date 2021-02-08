@@ -10,8 +10,15 @@
       >
       </el-input>
     </div>
+    <fulfilling-bouncing-circle-spinner
+      class="spinner"
+      v-if="isLoadingData"
+      :animation-duration="4000"
+      :size="60"
+      color="#FFE81F"
+    />
 
-    <div style="width: 100%; height: 100%">
+    <div style="width: 100%; height: 100%" v-if="!isLoadingData">
       <el-row :gutter="12">
         <el-col
           style="margin-bottom: 10px"
@@ -60,9 +67,12 @@
 
 <script>
 import { mapState, mapGetters } from "vuex";
+import { FulfillingBouncingCircleSpinner } from "epic-spinners";
 export default {
   name: "People",
-
+  components: {
+    FulfillingBouncingCircleSpinner
+  },
   data: () => {
     return {
       currentPage: 1,
@@ -77,7 +87,8 @@ export default {
   computed: {
     ...mapGetters(["getPeopleData"]),
     ...mapState({
-      count: state => state.count
+      count: state => state.count,
+      isLoadingData: state => state.isloadingData
     })
   },
 
@@ -97,11 +108,13 @@ export default {
       this.currentPage = newPageNumber;
       this.getPeople();
     },
-    getPeople() {
-      this.$store.dispatch("getPeople", {
+    async getPeople() {
+      this.$store.commit("SET_LOADING_DATA", true);
+      await this.$store.dispatch("getPeople", {
         page: this.currentPage,
         name: this.searchName
       });
+      this.$store.commit("SET_LOADING_DATA", false);
     }
   }
 };
